@@ -1,20 +1,20 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %}Tracking Log{% endblock %}
 {% block content %}
-<h2>Tracking Log</h2>
-<table class="table table-bordered">
+<h1>Tracking Log</h1>
+<table class="table table-striped">
     <thead>
         <tr>
-            {% for col in records[0].keys() %}
-            <th>{{ col }}</th>
+            {% for key in records[0].keys() %}
+            <th>{{ key }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
-        {% for record in records %}
+        {% for row in records %}
         <tr>
-            {% for val in record.values() %}
-            <td>{{ val }}</td>
+            {% for value in row.values() %}
+            <td>{{ value }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
