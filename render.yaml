@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: waste-tracking-platform
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn waste_tracking_platform:app
+    plan: free
+    envVars:
+      - key: FLASK_SECRET_KEY
+        sync: false
+      - key: SMTP_SERVER
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
