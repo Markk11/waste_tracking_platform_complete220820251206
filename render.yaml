@@ -4,6 +4,10 @@ services:
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn waste_tracking_platform:app
+    disk:
+      name: app-data
+      mountPath: /logs
+      sizeGB: 1
     plan: free
     envVars:
       - key: FLASK_SECRET_KEY
@@ -16,3 +20,4 @@ services:
         sync: false
       - key: SMTP_PASSWORD
         sync: false
+
