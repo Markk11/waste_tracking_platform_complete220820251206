@@ -1,11 +1,9 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %}Upload CSV{% endblock %}
 {% block content %}
-<h2>Upload Waste Tracking CSV</h2>
-<form method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <input class="form-control" type="file" name="csv_file" accept=".csv" required>
-    </div>
-    <button class="btn btn-primary" type="submit">Upload</button>
+<h1>Upload CSV File</h1>
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="csv_file" accept=".csv" required>
+    <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 {% endblock %}
