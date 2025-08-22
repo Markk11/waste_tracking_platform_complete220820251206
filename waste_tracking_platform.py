@@ -58,8 +58,8 @@ def dashboard():
     df = pd.DataFrame(waste_movements)
     return render_template('dashboard.html', records=df.to_dict(orient='records'))
 
-@app.route('/dashboard')
-def dashboard():
+@app.route('/dashboard-alt')
+def dashboard_alt():
     # Example: load records from CSV
     try:
         with open('data.csv', newline='') as csvfile:
@@ -155,4 +155,5 @@ def download_pdf():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
 
