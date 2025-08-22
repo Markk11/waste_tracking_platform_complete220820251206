@@ -55,8 +55,12 @@ def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    df = pd.DataFrame(waste_movements)
-    return render_template('dashboard.html', records=df.to_dict(orient='records'))
+    try:
+        df = pd.DataFrame(waste_movements)
+        return render_template('dashboard.html', records=df.to_dict(orient='records'))
+    except Exception as e:
+        app.logger.error("message", exc_info=True)
+        return "Internal error occurred. Check logs for details.", 500
 
 @app.route('/dashboard-alt')
 def dashboard_alt():
@@ -154,6 +158,5 @@ def download_pdf():
     return send_file(buffer, as_attachment=True, download_name='waste_report.pdf', mimetype='application/pdf')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
-
-
+    app.debug = True  # enables detailed error pages
+    app.run(host='0.0.0.0')
