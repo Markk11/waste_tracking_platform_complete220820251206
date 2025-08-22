@@ -26,6 +26,22 @@ users = {
 bins = {}
 waste_movements = []
 
+import logging
+from logging.handlers import RotatingFileHandler
+
+if not os.path.exists('logs'):
+    os.mkdir('logs')
+
+file_handler = RotatingFileHandler('logs/waste_tracking.log', maxBytes=10240, backupCount=10)
+file_handler.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+))
+file_handler.setLevel(logging.INFO)
+
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.INFO)
+app.logger.info('Waste Tracking Platform startup')
+
 EXPORT_FOLDER = os.environ.get("GOOGLE_DRIVE_MOUNT", "./shared_exports")
 os.makedirs(EXPORT_FOLDER, exist_ok=True)
 
@@ -54,26 +70,12 @@ def logout():
 def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
-
     try:
         df = pd.DataFrame(waste_movements)
         return render_template('dashboard.html', records=df.to_dict(orient='records'))
-    except Exception as e:
-        app.logger.error("message", exc_info=True)
+    except Exception:
+        app.logger.error("Failed to render dashboard", exc_info=True)
         return "Internal error occurred. Check logs for details.", 500
-
-@app.route('/dashboard-alt')
-def dashboard_alt():
-    # Example: load records from CSV
-    try:
-        with open('data.csv', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            records = list(reader)
-    except Exception as e:
-        print(f"Error loading CSV: {e}")
-        records = []
-
-    return render_template('dashboard.html', records=records)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -82,9 +84,14 @@ def upload():
     if request.method == 'POST':
         file = request.files['csv_file']
         if file and file.filename.endswith('.csv'):
-            df = pd.read_csv(file)
-            waste_movements.extend(df.to_dict(orient='records'))
-            return redirect(url_for('tracking_log'))
+            try:
+                df = pd.read_csv(file)
+                waste_movements.extend(df.to_dict(orient='records'))
+                app.logger.info(f"Uploaded file {file.filename} with {len(df)} records")
+                return redirect(url_for('tracking_log'))
+            except Exception:
+                app.logger.error("Upload failed", exc_info=True)
+                return "Upload failed. Check log.", 500
     return render_template('upload.html')
 
 @app.route('/tracking-log')
@@ -101,18 +108,15 @@ def generate_report():
 def send_email():
     if 'username' not in session or session['role'] != 'admin':
         return redirect(url_for('login'))
-
     if request.method == 'POST':
         subject = request.form['subject']
         body = request.form['body']
         recipient = request.form['email']
-
         msg = EmailMessage()
         msg['Subject'] = subject
         msg['From'] = os.environ.get('SMTP_USER')
         msg['To'] = recipient
         msg.set_content(body)
-
         try:
             with smtplib.SMTP(os.environ.get('SMTP_SERVER'), int(os.environ.get('SMTP_PORT', 587))) as smtp:
                 smtp.starttls()
@@ -121,7 +125,6 @@ def send_email():
             return 'Email sent successfully'
         except Exception as e:
             return f'Email failed: {str(e)}'
-
     return render_template('email_form.html')
 
 @app.route('/download_excel')
@@ -132,11 +135,9 @@ def download_excel():
     ws.append(df.columns.tolist())
     for row in df.itertuples(index=False):
         ws.append(list(row))
-
     stream = io.BytesIO()
     wb.save(stream)
     stream.seek(0)
-
     return send_file(stream, as_attachment=True, download_name='waste_report.xlsx', mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 @app.route('/download_pdf')
@@ -158,5 +159,5 @@ def download_pdf():
     return send_file(buffer, as_attachment=True, download_name='waste_report.pdf', mimetype='application/pdf')
 
 if __name__ == '__main__':
-    app.debug = True  # enables detailed error pages
+    app.debug = True
     app.run(host='0.0.0.0')
