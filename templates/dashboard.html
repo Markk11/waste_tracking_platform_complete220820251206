@@ -19,5 +19,12 @@
         </tr>
         {% endfor %}
     </tbody>
+{% if records %}
+    <table class="table table-bordered">
+        ...
+    </table>
+{% else %}
+    <p>No data available.</p>
+{% endif %}    
 </table>
 {% endblock %}
