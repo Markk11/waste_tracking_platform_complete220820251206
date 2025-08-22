@@ -1,9 +1,9 @@
-# Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY . /app
+COPY . .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:10000", "waste_tracking_platform:app"]
+CMD ["gunicorn", "waste_tracking_platform:app", "--bind", "0.0.0.0:8000"]
