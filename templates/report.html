@@ -1,22 +1,22 @@
-{% extends "base.html" %}
-{% block title %}Report{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Generate Report{% endblock %}
 {% block content %}
-<h2>Generated Waste Report</h2>
-<a class="btn btn-success mb-2" href="/download_excel">Download Excel</a>
-<a class="btn btn-danger mb-2" href="/download_pdf">Download PDF</a>
-<table class="table table-hover">
+<h1>Report</h1>
+<a href="{{ url_for('download_excel') }}" class="btn btn-success mb-2">Download Excel</a>
+<a href="{{ url_for('download_pdf') }}" class="btn btn-danger mb-2">Download PDF</a>
+<table class="table table-bordered">
     <thead>
         <tr>
-            {% for col in records[0].keys() %}
-            <th>{{ col }}</th>
+            {% for key in records[0].keys() %}
+            <th>{{ key }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
-        {% for record in records %}
+        {% for row in records %}
         <tr>
-            {% for val in record.values() %}
-            <td>{{ val }}</td>
+            {% for value in row.values() %}
+            <td>{{ value }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
