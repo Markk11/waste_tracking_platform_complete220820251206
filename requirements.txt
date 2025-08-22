@@ -1,0 +1,7 @@
+flask
+pandas
+python-dotenv
+openpyxl
+reportlab
+qrcode
+gunicorn
