@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Send Report{% endblock %}
+{% block content %}
+<h2>Send Report via Email</h2>
+<form method="post">
+    <div class="mb-3">
+        <label>Email:</label>
+        <input class="form-control" type="email" name="email" required>
+    </div>
+    <div class="mb-3">
+        <label>Subject:</label>
+        <input class="form-control" type="text" name="subject" required>
+    </div>
+    <div class="mb-3">
+        <label>Body:</label>
+        <textarea class="form-control" name="body" required></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Send Email</button>
+</form>
+{% endblock %}

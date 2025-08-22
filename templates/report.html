@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Report{% endblock %}
+{% block content %}
+<h2>Generated Waste Report</h2>
+<a class="btn btn-success mb-2" href="/download_excel">Download Excel</a>
+<a class="btn btn-danger mb-2" href="/download_pdf">Download PDF</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            {% for col in records[0].keys() %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            {% for val in record.values() %}
+            <td>{{ val }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

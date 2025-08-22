@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Tracking Log{% endblock %}
+{% block content %}
+<h2>Tracking Log</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            {% for col in records[0].keys() %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            {% for val in record.values() %}
+            <td>{{ val }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
