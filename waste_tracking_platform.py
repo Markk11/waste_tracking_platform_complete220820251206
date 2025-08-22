@@ -58,6 +58,19 @@ def dashboard():
     df = pd.DataFrame(waste_movements)
     return render_template('dashboard.html', records=df.to_dict(orient='records'))
 
+@app.route('/dashboard')
+def dashboard():
+    # Example: load records from CSV
+    try:
+        with open('data.csv', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            records = list(reader)
+    except Exception as e:
+        print(f"Error loading CSV: {e}")
+        records = []
+
+    return render_template('dashboard.html', records=records)
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if 'username' not in session or session['role'] != 'admin':
@@ -142,3 +155,4 @@ def download_pdf():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
