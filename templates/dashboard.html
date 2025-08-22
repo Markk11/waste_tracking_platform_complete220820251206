@@ -1,24 +1,20 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2>Dashboard</h2>
-<a class="btn btn-secondary mb-2" href="/upload">Upload Waste Log</a>
-<a class="btn btn-secondary mb-2" href="/tracking-log">View Tracking Log</a>
-<a class="btn btn-secondary mb-2" href="/generate-report">Generate Report</a>
-<a class="btn btn-secondary mb-2" href="/send-email">Send Report via Email</a>
-<table class="table table-striped">
+<h1>Dashboard</h1>
+<table class="table table-bordered">
     <thead>
         <tr>
-            {% for col in records[0].keys() %}
-            <th>{{ col }}</th>
+            {% for key in records[0].keys() %}
+            <th>{{ key }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
-        {% for record in records %}
+        {% for row in records %}
         <tr>
-            {% for col in record.values() %}
-            <td>{{ col }}</td>
+            {% for value in row.values() %}
+            <td>{{ value }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
